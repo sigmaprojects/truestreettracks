@@ -15,6 +15,7 @@
 	
 	<script src="js/lib/jquery.js" type="application/javascript"></script>
 	<script src="js/lib/jquery.mobile-1.2.0-beta.1.min.js" type="application/javascript"></script>
+	<script src="js/lib/jquery.format.js" type="application/javascript"></script>
 
 	<script src="js/lib/persistencejs/persistence.js" type="application/javascript"></script>
 	<script src="js/lib/persistencejs/persistence.store.sql.js" type="application/javascript"></script>
@@ -54,7 +55,19 @@
 	   	    <h1>Record New Track</h1>
 			<!--<a href="#home" class="ui-btn-right" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>-->
 	    </div>
-			
+		<style type="text/css">
+			div#track-record-errors {
+				margin:30px;
+			}
+			dl#track-record-info {
+				width:300px;
+				margin:5% 25% 0 25%;
+			}
+			dl#track-record-info dt {width:100px; text-align:right;}
+			dl#track-record-info dd { text-align:left;}
+			dl#track-record-info dt,dl#track-record-info dd { float: left;}
+			dl#track-record-info dd + dt { clear: left; }
+		</style>
 		<div data-role="content" class="recordtrackcontent" align="center">
 			<div id="track-record-control-container">
 				<!--
@@ -63,6 +76,26 @@
 				-->
 				<button id="start-track-recording" data-role="button" data-inline="true">Start</button>
 				<button id="stop-track-recording" data-role="button" data-inline="true">Stop</button>
+			</div>
+			<div id="track-record-info-container" align="center">
+				<dl id="track-record-info" style="">
+					<!--
+					<dt>Latitude</dt>
+					<dd>33.751681</dd>
+					<dt>Longitude</dt>
+					<dd>-168.684684</dd>
+					<dt>Altitude</dt>
+					<dd>50</dd>
+					<dt>Accuracy</dt>
+					<dd>65</dd>
+					<dt>Heading</dt>
+					<dd>NE</dd>
+					<dt>Speed</dt>
+					<dd>50</dd>
+					-->
+				</dl>
+				<div style="clear:both;"></div>
+				<div id="track-record-error"></div>
 			</div>
 		</div>
 		

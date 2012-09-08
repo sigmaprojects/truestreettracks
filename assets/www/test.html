@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Device Properties Example</title>
+
+    <script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    var watchID = null;
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        // Throw an error if no update is received every 30 seconds
+        var options = { maximumAge: 500, timeout: 1000, enableHighAccuracy: true };
+        watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
+    }
+
+    // onSuccess Geolocation
+    //
+    function onSuccess(position) {
+        var element = document.getElementById('geolocation');
+        element.innerHTML = 'Latitude: '         + position.coords.latitude  + '<br/>' +
+                        'Longitude: '            + position.coords.longitude + '<br/>' +
+                        'Altitude: '             + position.coords.altitude  + '<br/>' +
+                        'Accuracy: '             + position.coords.accuracy  + '<br/>' +
+                        'Altitude Accuracy: '    + position.coords.altitudeAccuracy  + '<br/>' +
+                        'Heading: '              + position.coords.heading   + '<br/>' +
+                        'Speed: '                + position.coords.speed     + '<br/>' +
+						 '<hr />'      + element.innerHTML;
+		console.log(watchID);
+    }
+
+    // onError Callback receives a PositionError object
+    //
+	var errorCount = 0;
+    function onError(error) {
+		/*
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+		*/
+		errorCount++;
+        var element = document.getElementById('geolocation');
+        element.innerHTML = 'code: '	+ error.code		+ '<br />' +
+                            'message: '	+ error.message		+ '<br />' +
+                            'errorC: '	+ errorCount		+ '<br />' +
+                            '<hr />'      + element.innerHTML;
+    }
+
+    </script>
+  </head>
+  <body>
+    <p id="geolocation">Watching geolocation...</p>
+  </body>
+</html>

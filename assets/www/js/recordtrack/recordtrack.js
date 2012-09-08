@@ -7,7 +7,16 @@ function RecordTrack(Context){
 RecordTrack.prototype.Init = function(){
 	var objSelf = this;
 
+	objSelf.TrackRecordInfo = $('#track-record-info');
+	
+	objSelf.WatchPositionOptions = {
+		maximumAge: 500,
+		timeout: 1000,
+		enableHighAccuracy: false
+	};
+	
 	objSelf.Recording = false;
+
 
 	objSelf.Context.on('vclick', '#start-track-recording',
 		function( objEvent ) {
@@ -90,6 +99,12 @@ RecordTrack.prototype.StopRecording = function() {
 	var startBtn = $('#start-track-recording');
 	startBtn.text('Start');
 	startBtn.buttonMarkup({theme: 'a'}).button('refresh');
+
+	if(objSelf.WatchPositionID != null) {
+		navigator.geolocation.clearWatch(objSelf.WatchPositionID);
+		objSelf.WatchPositionID = null;
+	};
+
 	return;
 };
 
@@ -98,13 +113,48 @@ RecordTrack.prototype.StartRecording = function( jElm ) {
 	objSelf.Recording = true;
 	jElm.text('Recording...');
 	jElm.buttonMarkup({theme: 'c'}).button('refresh');
+	
+	objSelf.WatchPositionID = navigator.geolocation.watchPosition(
+		function(Position) {
+			objSelf.WatchPositionSuccess(Position)
+		},
+		function(Error) {
+			objSelf.WatchPositionError(Error)
+		},
+		objSelf.WatchPositionOptions
+	);
+	
 	return;
 };
 
 
 
-
-
+RecordTrack.prototype.WatchPositionSuccess = function( Position ) {
+	var objSelf = this;
+	var dts = ''
+		+	'<dt>Time</dt>'
+		+	'<dd>'+ $.format.date(new Date(Position.timestamp), 'EEE, d MM yy HH:mm:ss Z') +'</dd>'
+		+	'<dt>Latitude</dt>'
+		+	'<dd>'+ Position.coords.latitude +'</dd>'
+		+	'<dt>Longitude</dt>'
+		+	'<dd>'+ Position.coords.longitude +'</dd>'
+		+	'<dt>Altitude</dt>'
+		+	'<dd>'+ Position.coords.altitude +'</dd>'
+		+	'<dt>Accuracy</dt>'
+		+	'<dd>'+ Position.coords.accuracy +'</dd>'
+		+	'<dt>Heading</dt>'
+		+	'<dd>'+ Position.coords.heading +'</dd>'
+		+	'<dt>Speed</dt>'
+		+	'<dd>'+ Position.coords.speed +'</dd>'
+		+	'';
+	objSelf.TrackRecordInfo[0].innerHTML = dts;
+	return;
+};
+RecordTrack.prototype.WatchPositionError = function( Error ) {
+	var objSelf = this;
+	$('#track-record-error').text( Error.message );
+	return;
+};
 
 
 

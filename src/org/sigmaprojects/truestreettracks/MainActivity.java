@@ -16,10 +16,11 @@ public class MainActivity extends DroidGap {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.loadUrl("file:///android_asset/www/index.html");
     }
-
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
+    */
 }
