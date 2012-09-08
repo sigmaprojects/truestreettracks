@@ -11,6 +11,8 @@
 	<link rel="stylesheet" href="css/jqm/themes/default/jquery.mobile-1.2.0-beta.1.css" />
 	<link rel="stylesheet" href="css/master.css" />
 	
+	<script src="cordova-2.0.0.js" type="application/javascript"></script>
+	
 	<script src="js/lib/jquery.js" type="application/javascript"></script>
 	<script src="js/lib/jquery.mobile-1.2.0-beta.1.min.js" type="application/javascript"></script>
 
@@ -27,27 +29,45 @@
 	
 	<script src="js/controller.js" type="application/javascript"></script>
 	
+	<script src="js/recordtrack/recordtrack.js" type="application/javascript"></script>
 
 </head>
 
 
 <body onload="init();">
 
-		<div data-role="page" id="home" data-theme="b">
-			<!--
- 			<div data-role="header">
-	    	    <h1>Nimblestix</h1>
-		    </div>
-			-->
-			<div data-role="content" class="homecontent" align="center">
-				<a id="gologin" href="#login-view" data-inline="true" data-role="button" data-transition="slide">Login</a>
-				<a id="gomain" href="#main" data-inline="true" data-role="button" data-transition="slide">Main</a>
-				<a id="gosettings" href="#settings" data-inline="true" data-role="button" data-transition="slide">Settings</a>
-				<a href="http://beta.nimblestix.com/" data-inline="true" target="_external" data-role="button">Visit Site</a>
-			</div>
-
-
+	<div data-role="page" id="home" data-theme="a">
+ 		<div data-role="header">
+	   	    <h1>TrueStreets</h1>
+	    </div>
+			
+		<div data-role="content" class="homecontent" align="center">
+			<a href="#my-tracks" data-inline="true" data-role="button" data-transition="slide">My Tracks</a>
+			<a href="#record-track" data-inline="true" data-role="button" data-transition="slide">Record New Track</a>
 		</div>
+	</div>
+
+
+
+	<div data-role="page" id="record-track" data-theme="a" data-add-back-btn="true">
+ 		<div data-role="header">
+	   	    <h1>Record New Track</h1>
+			<!--<a href="#home" class="ui-btn-right" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>-->
+	    </div>
+			
+		<div data-role="content" class="recordtrackcontent" align="center">
+			<div id="track-record-control-container">
+				<!--
+				<a href="#" id="start-recording" data-role="button" data-inline="true">Start</a>
+				<a href="#" id="stop-recording" data-role="button" data-inline="true">Stop</a>
+				-->
+				<button id="start-track-recording" data-role="button" data-inline="true">Start</button>
+				<button id="stop-track-recording" data-role="button" data-inline="true">Stop</button>
+			</div>
+		</div>
+		
+	</div>
+
 
 	
 </body>
