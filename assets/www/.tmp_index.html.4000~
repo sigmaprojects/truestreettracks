@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title>True Street Tracks</title>
+	<title>jQuery Mobile: Demos and Documentation</title>
 	
 	<base href="./"/> 
 	
@@ -20,11 +20,8 @@
 	<script src="js/lib/persistencejs/persistence.js" type="application/javascript"></script>
 	<script src="js/lib/persistencejs/persistence.store.sql.js" type="application/javascript"></script>
 	<script src="js/lib/persistencejs/persistence.store.websql.js" type="application/javascript"></script>
-	<!-- 
-
-	-->
-
-	<script src="js/lib/persistencejs/config.js" type="application/javascript"></script>
+	<script src="js/lib/persistencejs/persistence.jquery.js" type="application/javascript"></script>
+	<script src="js/lib/persistencejs/persistence.jquery.mobile.js" type="application/javascript"></script>
 
 	<script src="js/lib/iscroll.js" type="application/javascript"></script>
 	<script src="js/lib/doT.min.js" type="application/javascript"></script>
@@ -70,37 +67,15 @@
 			dl#track-record-info dd { text-align:left;}
 			dl#track-record-info dt,dl#track-record-info dd { float: left;}
 			dl#track-record-info dd + dt { clear: left; }
-			#savetrack-popup {
-				width:80%;
-			}
 		</style>
 		<div data-role="content" class="recordtrackcontent" align="center">
-
-			<div data-role="popup" id="savetrack" data-theme="b" class="ui-corner-all">
-				<a href="#" data-rel="back" data-role="button" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-				<form action="#" id="savetrackform" data-ajax="false">
-					<div style="padding:10px 20px;">
-						<h3>Save Track</h3>
-						<fieldset data-role="controlgroup" id="tofacebookoptioncontainer">
-							<label for="new-track-title">Title:</label>
-							<input type="text" name="title" id="new-track-title" />
-						</fieldset>
-
-						<div style="float:left;">
-							<button type="reset" data-inline="true">Cancel</button>
-						</div>
-						<div style="float:right;">
-							<button type="submit" data-inline="true">Save</button>
-						</div>
-						<div style="clear:both;"></div>
-					</div>
-				</form>
-			</div>
-
 			<div id="track-record-control-container">
+				<!--
+				<a href="#" id="start-recording" data-role="button" data-inline="true">Start</a>
+				<a href="#" id="stop-recording" data-role="button" data-inline="true">Stop</a>
+				-->
 				<button id="start-track-recording" data-role="button" data-inline="true">Start</button>
 				<button id="stop-track-recording" data-role="button" data-inline="true">Stop</button>
-				<button id="save-track-recording" data-role="button" data-inline="true" style="">Save</button>
 			</div>
 			<div id="track-record-info-container" align="center">
 				<dl id="track-record-info" style="">

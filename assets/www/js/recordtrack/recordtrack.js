@@ -36,6 +36,24 @@ RecordTrack.prototype.Init = function(){
 		}
 	);
 
+	objSelf.Context.on('vclick', '#save-track-recording',
+		function( objEvent ) {
+			var $this = $(this);
+			objSelf.ShowSaveTrackDialog( $this );
+			objEvent.preventDefault();
+			return( false );
+		}
+	);
+
+	objSelf.Context.on('submit', 'form#savetrackform',
+		function( objEvent ) {
+			var $this = $(this);
+			objSelf.SaveTrack( $this );
+			objEvent.preventDefault();
+			return( false );
+		}
+	);
+
 	objSelf.Context.on('pageshow', function(e, data){
 		$(document).bind('pagebeforechange', function(e, data) {
 			objSelf.PageBeforeHide( e, data );
@@ -92,6 +110,47 @@ RecordTrack.prototype.PageBeforeHide = function(e, data) {
 };
 
 
+RecordTrack.prototype.ShowSaveTrackDialog = function() {
+	var objSelf = this;
+	var saveTrackDiag = $('div#savetrack');
+	saveTrackDiag.popup('open');
+	return;
+};
+
+RecordTrack.prototype.SaveTrack = function( jElm ) {
+	var objSelf = this;
+	objSelf.setBusy(true);
+	
+	objSelf.Track.title = jElm.find('input[name="title"]').val();
+	objSelf.Track.selectJSON(
+		null,
+		['*'],
+		function(objPostProperties) {
+			objSelf.SaveTrackPost(objPostProperties, jElm);
+		}
+	);
+	return;
+};
+RecordTrack.prototype.SaveTrackPost = function(objPostProperties, jElm) {
+	var objSelf = this;
+	$.ajax({
+		type: 'POST',
+		url: objSelf.getEnviroment().BaseControllerURL + 'tracks/save',
+		data: objPostProperties,
+		dataType: 'json',
+		success: function(response, status, request) {
+			objSelf.SaveTrackHandler( response, jElm );
+		},
+		error: function () {  },
+        complete: function() { objSelf.setBusy(false); }
+	});
+	return;
+};
+RecordTrack.prototype.SaveTrackHandler = function( response, jElm ) {
+	console.log(response);
+	console.log(jElm);
+};
+
 
 RecordTrack.prototype.StopRecording = function() {
 	var objSelf = this;
@@ -104,7 +163,14 @@ RecordTrack.prototype.StopRecording = function() {
 		navigator.geolocation.clearWatch(objSelf.WatchPositionID);
 		objSelf.WatchPositionID = null;
 	};
-
+	
+	console.log( objSelf.Track.selectJSON(
+		null,
+		['*'],
+		function(a) {
+			return a;
+		}
+	));
 	return;
 };
 
@@ -112,11 +178,17 @@ RecordTrack.prototype.StartRecording = function( jElm ) {
 	var objSelf = this;
 	objSelf.Recording = true;
 	jElm.text('Recording...');
-	jElm.buttonMarkup({theme: 'c'}).button('refresh');
+	jElm.buttonMarkup({theme: 'b'}).button('refresh');
+	
+	objSelf.Track = new Track({
+		title: 'New Track',
+		created: new Date(),
+		updated: new Date()
+	});
 	
 	objSelf.WatchPositionID = navigator.geolocation.watchPosition(
-		function(Position) {
-			objSelf.WatchPositionSuccess(Position)
+		function(Pos) {
+			objSelf.WatchPositionSuccess(Pos)
 		},
 		function(Error) {
 			objSelf.WatchPositionError(Error)
@@ -129,23 +201,36 @@ RecordTrack.prototype.StartRecording = function( jElm ) {
 
 
 
-RecordTrack.prototype.WatchPositionSuccess = function( Position ) {
+RecordTrack.prototype.WatchPositionSuccess = function( pos ) {
 	var objSelf = this;
+
+	var PositionModel = new Position( {
+		timestamp: pos.timestamp,
+		latitude: pos.coords.latitude,
+    	longitude: pos.coords.longitude,
+		altitude: pos.coords.altitude,
+		accuracy: pos.coords.accuracy,
+		heading: pos.coords.heading,
+		speed: pos.coords.speed
+	} );
+
+	objSelf.Track.positions.add(PositionModel);
+	
 	var dts = ''
 		+	'<dt>Time</dt>'
-		+	'<dd>'+ $.format.date(new Date(Position.timestamp), 'EEE, d MM yy HH:mm:ss Z') +'</dd>'
+		+	'<dd>'+ $.format.date(new Date(pos.timestamp), 'EEE, d MM yy HH:mm:ss Z') +'</dd>'
 		+	'<dt>Latitude</dt>'
-		+	'<dd>'+ Position.coords.latitude +'</dd>'
+		+	'<dd>'+ pos.coords.latitude +'</dd>'
 		+	'<dt>Longitude</dt>'
-		+	'<dd>'+ Position.coords.longitude +'</dd>'
+		+	'<dd>'+ pos.coords.longitude +'</dd>'
 		+	'<dt>Altitude</dt>'
-		+	'<dd>'+ Position.coords.altitude +'</dd>'
+		+	'<dd>'+ pos.coords.altitude +'</dd>'
 		+	'<dt>Accuracy</dt>'
-		+	'<dd>'+ Position.coords.accuracy +'</dd>'
+		+	'<dd>'+ pos.coords.accuracy +'</dd>'
 		+	'<dt>Heading</dt>'
-		+	'<dd>'+ Position.coords.heading +'</dd>'
+		+	'<dd>'+ pos.coords.heading +'</dd>'
 		+	'<dt>Speed</dt>'
-		+	'<dd>'+ Position.coords.speed +'</dd>'
+		+	'<dd>'+ pos.coords.speed +'</dd>'
 		+	'';
 	objSelf.TrackRecordInfo[0].innerHTML = dts;
 	return;
